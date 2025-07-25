@@ -22,7 +22,8 @@ public interface Contract {
     }
 
     interface Model {
-        HashMap<String, String> findAccount();
+        boolean checkAccount(String username, String password);
+
 
         void fetchImageFromUrl(String url, ImageCallBack callBack);
 

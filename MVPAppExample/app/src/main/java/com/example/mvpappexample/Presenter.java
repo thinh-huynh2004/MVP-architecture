@@ -1,6 +1,8 @@
 package com.example.mvpappexample;
 
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Looper;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -16,13 +18,13 @@ public class Presenter implements Contract.Presenter{
 
     @Override
     public void checkAccount(String username, String password) {
-        HashMap<String, String> accounts = model.findAccount();
-        if (!Objects.equals(accounts.get(username), password)) {
-            view.onError("Login failed");
-            return;
+        boolean finded = model.checkAccount(username, password);
+        if (finded) {
+            view.onSuccess("Login success");
         }
-        view.onSuccess("Login success");
-        return;
+        else {
+            view.onError("Login failed");
+        }
     }
 
     @Override

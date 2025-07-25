@@ -1,7 +1,6 @@
 package com.example.mvpappexample;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,8 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,9 +30,45 @@ public class MainActivity extends AppCompatActivity implements Contract.View {
     String model = Build.MODEL;
     String manufacturer = Build.MANUFACTURER;
 
+    private class Device {
+        String typeOfDevice() {return "";};
+    }
 
+    private class VirtualDevice extends Device {
+        @Override
+        String typeOfDevice() {
+            return "Virtual device";
+        }
+    }
 
+    private class RealDevice extends Device {
+        @Override
+        String typeOfDevice() {
+            return "Real device";
+        }
+    }
 
+    private class Create {
+        Device typeDevice() { return null; };
+        String displayTypeDevice() {
+            Device type = this.typeDevice();
+            return type.typeOfDevice();
+        }
+    }
+
+    private class CreateVirtual extends Create {
+        @Override
+        Device typeDevice() {
+            return new VirtualDevice();
+        }
+    }
+
+    private class CreateReal extends Create {
+        @Override
+        Device typeDevice() {
+            return new RealDevice();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +83,10 @@ public class MainActivity extends AppCompatActivity implements Contract.View {
         loadImage = findViewById(R.id.loadImage);
         checkDevice = findViewById(R.id.checkDevice);
 
-        ExecutorService service = Executors.newSingleThreadExecutor();
-
         presenter = new Presenter(this, new Model());
 
         button.setOnClickListener(v ->
                 presenter.checkAccount(email.getText().toString(), password.getText().toString()));
-
-        Handler handler = new Handler(Looper.getMainLooper());
 
         loadImage.setOnClickListener(v -> {
             if (clicked == true) {
@@ -73,10 +102,12 @@ public class MainActivity extends AppCompatActivity implements Contract.View {
         });
 
         if (model.contains("sdk")) {
-            checkDevice.setText("virtual device");
+            Create virtual = new CreateVirtual();
+            checkDevice.setText(virtual.displayTypeDevice());
         }
         else {
-            checkDevice.setText("real device");
+            Create real = new CreateReal();
+            checkDevice.setText(real.displayTypeDevice());
         }
 
     }

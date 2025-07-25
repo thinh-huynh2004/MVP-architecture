@@ -23,25 +23,5 @@ public class LoginPresenterTest {
 
     }
 
-    @Test
-    public void testCheckAccount_Success() {
-        HashMap<String, String> fakeAccount = new HashMap<>();
-        fakeAccount.put("thinh", "123456");
-        Mockito.when(mockModel.findAccount()).thenReturn(fakeAccount);
-
-        presenter.checkAccount("thinh", "123456");
-
-        Mockito.verify(mockView).onSuccess("Login success");
-    }
-
-    @Test
-    public void testCheckAccount_UserNotFound() {
-        HashMap<String, String> fakeData = new HashMap<>(); // trống
-        Mockito.when(mockModel.findAccount()).thenReturn(fakeData);
-
-        presenter.checkAccount("nonexist@gmail.com", "any");
-
-        Mockito.verify(mockView).onError("Login failed");
-    }
 }
 

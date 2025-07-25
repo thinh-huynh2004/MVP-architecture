@@ -7,21 +7,29 @@ import android.os.Looper;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Model implements Contract.Model {
-    private final ExecutorService service = Executors.newSingleThreadExecutor();
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private ExecutorService service = null;
+    private Handler handler = null;
 
+    private HashMap<String, String> accounts = null;
+
+    public Model() {
+        handler = new Handler(Looper.getMainLooper());
+        service = Executors.newSingleThreadExecutor();
+        accounts = new HashMap<String, String>();
+        accounts.put("alice@gmail.com", "alice123");
+        accounts.put("bob@gmail.com", "bob123");
+        accounts.put("charlie@gmail.com", "charlie123");
+    }
 
     @Override
-    public HashMap<String, String> findAccount() {
-        HashMap<String, String> password = new HashMap<>();
-        password.put("alice@gmail.com", "alice123");
-        password.put("bob@gmail.com", "bob123");
-        password.put("charlie@gmail.com", "charlie123");
-        return password;
+    public boolean checkAccount(String username, String password) {
+        String pass = accounts.get(username);
+        return Objects.equals(pass, password);
     }
     @Override
     public void fetchImageFromUrl(String url, ImageCallBack callBack) {
